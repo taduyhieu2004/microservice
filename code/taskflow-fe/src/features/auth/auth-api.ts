@@ -25,4 +25,10 @@ export const authApi = {
   logout: () => api.post<ApiResponse<void>>('/auth/logout').then(unwrap),
 
   me: () => api.get<ApiResponse<User>>('/users/me').then(unwrap),
+
+  searchUsers: (q: string) =>
+    api.get<ApiResponse<User[]>>('/users', { params: { q } }).then(unwrap),
+
+  getUser: (id: number) =>
+    api.get<ApiResponse<User>>(`/users/${id}`).then(unwrap),
 };
