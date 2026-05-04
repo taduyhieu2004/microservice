@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TaskFlow — Board</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Inter', 'sans-serif'] },
+    colors: { primary: { 50:'#eef2ff',100:'#e0e7ff',500:'#6366f1',600:'#4f46e5',700:'#4338ca' } }
+  }}
+}
+</script>
+<style>
+.task-card { transition: all 150ms ease; }
+.task-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.task-card.dragging { opacity: 0.4; transform: rotate(2deg); }
+.column-drop-target { background: #eef2ff !important; outline: 2px dashed #6366f1; }
+</style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+
+<!-- TOPBAR (giống dashboard) -->
+<header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-30 h-14">
+  <div class="h-full px-4 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary-600 rounded-md flex items-center justify-center">
+        <i data-lucide="square-kanban" class="w-4 h-4 text-white"></i>
+      </div>
+      <span class="font-bold text-gray-900">TaskFlow</span>
+    </div>
+    <div class="flex-1 max-w-md mx-auto">
+      <div class="relative">
+        <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+        <input placeholder="Tìm task trong board..." class="w-full pl-9 pr-4 py-2 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:bg-white outline-none">
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"><i data-lucide="moon" class="w-5 h-5"></i></button>
+      <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative" onclick="document.getElementById('notifPanel').classList.toggle('hidden')">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+        <span class="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">2</span>
+      </button>
+      <button class="flex items-center gap-2 p-1 hover:bg-gray-100 rounded-lg">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-semibold text-sm">A</div>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Notification dropdown (toggle by bell) -->
+<div id="notifPanel" class="hidden fixed top-14 right-4 w-96 bg-white border border-gray-200 rounded-xl shadow-xl z-40">
+  <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+    <h3 class="font-semibold text-gray-900">Thông báo</h3>
+    <button class="text-xs text-primary-600 hover:text-primary-700 font-medium">Đánh dấu tất cả đã đọc</button>
+  </div>
+  <div class="max-h-96 overflow-y-auto">
+    <a href="#" class="block p-4 hover:bg-gray-50 border-b border-gray-100 bg-primary-50/30">
+      <div class="flex gap-3">
+        <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm text-gray-900"><b>Bob</b> đã comment kèm @mention</p>
+          <p class="text-xs text-gray-500 mt-0.5">"Hi @user1 take a look please"</p>
+          <p class="text-xs text-gray-400 mt-1">2 phút trước</p>
+        </div>
+        <span class="w-2 h-2 bg-primary-500 rounded-full mt-2"></span>
+      </div>
+    </a>
+    <a href="#" class="block p-4 hover:bg-gray-50 border-b border-gray-100 bg-primary-50/30">
+      <div class="flex gap-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm text-gray-900"><b>Alice</b> đã giao task cho bạn</p>
+          <p class="text-xs text-gray-500 mt-0.5">"Phase 5 task assigned to bob"</p>
+          <p class="text-xs text-gray-400 mt-1">5 phút trước</p>
+        </div>
+        <span class="w-2 h-2 bg-primary-500 rounded-full mt-2"></span>
+      </div>
+    </a>
+    <a href="#" class="block p-4 hover:bg-gray-50">
+      <div class="flex gap-3">
+        <div class="w-9 h-9 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm text-gray-700">Task <b>"Setup login"</b> sắp hết hạn</p>
+          <p class="text-xs text-gray-500 mt-0.5">Còn 3 giờ</p>
+          <p class="text-xs text-gray-400 mt-1">1 giờ trước</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="p-3 border-t border-gray-100 text-center">
+    <a href="05-notifications.html" class="text-sm text-primary-600 hover:text-primary-700 font-medium">Xem tất cả</a>
+  </div>
+</div>
+
+<div class="flex pt-14">
+  <!-- SIDEBAR -->
+  <aside class="w-60 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+    <div class="p-3">
+      <button class="w-full flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700">
+        <i data-lucide="plus" class="w-4 h-4"></i> Project mới
+      </button>
+    </div>
+    <nav class="px-2 space-y-0.5">
+      <a href="02-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </a>
+      <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+        <i data-lucide="folder" class="w-4 h-4"></i> Tất cả project
+      </a>
+    </nav>
+    <div class="mt-4 px-2">
+      <div class="px-3 mb-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Pinned</div>
+      <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg bg-primary-50 text-primary-700 font-medium">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+        TaskFlow Mobile
+      </a>
+      <div class="ml-5 mt-1 space-y-0.5">
+        <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-900 font-medium">
+          <i data-lucide="layout" class="w-3 h-3"></i> Main Board
+        </a>
+        <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg text-gray-600 hover:bg-gray-100">
+          <i data-lucide="layout" class="w-3 h-3"></i> Bugs
+        </a>
+        <a href="06-members.html" class="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg text-gray-600 hover:bg-gray-100">
+          <i data-lucide="users" class="w-3 h-3"></i> Members
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ml-60 flex-1 flex flex-col overflow-hidden" style="height: calc(100vh - 56px);">
+    <!-- Board header -->
+    <div class="bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <a href="02-dashboard.html" class="hover:text-gray-700">Projects</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <a href="#" class="hover:text-gray-700">TaskFlow Mobile</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-gray-900 font-medium">Main Board</span>
+      </div>
+      <div class="flex items-center justify-between mt-2">
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl font-bold text-gray-900">Main Board</h1>
+          <button class="p-1 text-gray-400 hover:text-gray-700"><i data-lucide="star" class="w-4 h-4"></i></button>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-xs font-semibold ring-2 ring-white" title="Alice (OWNER)">A</div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-semibold ring-2 ring-white" title="Bob (EDITOR)">B</div>
+            <button class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 text-xs ring-2 ring-white" title="Add member">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <span class="w-px h-5 bg-gray-200"></span>
+          <button class="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-1.5">
+            <i data-lucide="filter" class="w-4 h-4"></i> Lọc
+          </button>
+          <button class="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-1.5">
+            <i data-lucide="arrow-up-down" class="w-4 h-4"></i> Sắp xếp
+          </button>
+          <button class="p-1.5 text-gray-700 hover:bg-gray-100 rounded-lg">
+            <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kanban columns -->
+    <div class="flex-1 overflow-x-auto overflow-y-hidden p-6">
+      <div class="flex gap-4 h-full min-w-max">
+        <!-- Column: To Do -->
+        <div class="w-72 bg-gray-100 rounded-xl flex flex-col">
+          <div class="p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-slate-400 rounded-full"></span>
+              <h3 class="font-semibold text-gray-900 text-sm">To Do</h3>
+              <span class="text-xs text-gray-500">3</span>
+            </div>
+            <div class="flex">
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto px-2 pb-2 space-y-2">
+            <!-- Task card -->
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer">
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-blue-100 text-blue-700">Backend</span>
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-rose-100 text-rose-700">Bug</span>
+              </div>
+              <h4 class="text-sm font-medium text-gray-900">Implement JWT refresh flow</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 30/05</span>
+                  <span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3 h-3"></i> 2</span>
+                  <span class="flex items-center gap-1"><i data-lucide="paperclip" class="w-3 h-3"></i> 1</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-[10px] font-semibold">A</div>
+              </div>
+            </a>
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer">
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-violet-100 text-violet-700">Frontend</span>
+              </div>
+              <h4 class="text-sm font-medium text-gray-900">Setup Tailwind + shadcn UI</h4>
+              <!-- Checklist progress -->
+              <div class="mt-2.5">
+                <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                  <span class="flex items-center gap-1"><i data-lucide="check-square" class="w-3 h-3"></i> Checklist</span>
+                  <span>2/4</span>
+                </div>
+                <div class="h-1 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald-500" style="width:50%"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1 text-amber-600"><i data-lucide="flag" class="w-3 h-3"></i> HIGH</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[10px] font-semibold">B</div>
+              </div>
+            </a>
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer">
+              <h4 class="text-sm font-medium text-gray-900">Write Liquibase migrations</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> 02/06</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-[10px]"><i data-lucide="user" class="w-3 h-3"></i></div>
+              </div>
+            </a>
+          </div>
+          <button class="m-2 px-3 py-2 text-sm text-gray-600 hover:bg-white rounded-lg flex items-center gap-1.5 justify-center">
+            <i data-lucide="plus" class="w-4 h-4"></i> Thêm task
+          </button>
+        </div>
+
+        <!-- Column: In Progress -->
+        <div class="w-72 bg-gray-100 rounded-xl flex flex-col">
+          <div class="p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+              <h3 class="font-semibold text-gray-900 text-sm">In Progress</h3>
+              <span class="text-xs text-gray-500">2</span>
+            </div>
+            <div class="flex">
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto px-2 pb-2 space-y-2">
+            <!-- Dragging task example -->
+            <div class="task-card dragging block bg-white rounded-lg p-3 ring-2 ring-primary-500 ring-offset-2 ring-offset-gray-100">
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-blue-100 text-blue-700">Backend</span>
+              </div>
+              <h4 class="text-sm font-medium text-gray-900">Setup Spring Boot project</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1 text-rose-600 font-medium"><i data-lucide="flag" class="w-3 h-3"></i> URGENT</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-[10px] font-semibold">A</div>
+              </div>
+            </div>
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer">
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-emerald-100 text-emerald-700">DevOps</span>
+              </div>
+              <h4 class="text-sm font-medium text-gray-900">Configure Docker Compose</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1 text-rose-600"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Quá hạn</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[10px] font-semibold">B</div>
+              </div>
+            </a>
+          </div>
+          <button class="m-2 px-3 py-2 text-sm text-gray-600 hover:bg-white rounded-lg flex items-center gap-1.5 justify-center">
+            <i data-lucide="plus" class="w-4 h-4"></i> Thêm task
+          </button>
+        </div>
+
+        <!-- Column: In Review -->
+        <div class="w-72 bg-gray-100 rounded-xl flex flex-col column-drop-target">
+          <div class="p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <h3 class="font-semibold text-gray-900 text-sm">In Review</h3>
+              <span class="text-xs text-gray-500">1</span>
+            </div>
+            <div class="flex">
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto px-2 pb-2 space-y-2">
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer">
+              <h4 class="text-sm font-medium text-gray-900">Add cycle detection for dependencies</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> 1 dep</span>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-[10px] font-semibold">A</div>
+              </div>
+            </a>
+            <!-- Drop placeholder -->
+            <div class="rounded-lg border-2 border-dashed border-primary-400 bg-primary-50 p-3 flex items-center justify-center text-primary-600 text-xs font-medium">
+              Thả task vào đây
+            </div>
+          </div>
+          <button class="m-2 px-3 py-2 text-sm text-gray-600 hover:bg-white rounded-lg flex items-center gap-1.5 justify-center">
+            <i data-lucide="plus" class="w-4 h-4"></i> Thêm task
+          </button>
+        </div>
+
+        <!-- Column: Done -->
+        <div class="w-72 bg-gray-100 rounded-xl flex flex-col">
+          <div class="p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+              <h3 class="font-semibold text-gray-900 text-sm">Done</h3>
+              <span class="text-xs text-gray-500">4</span>
+            </div>
+            <div class="flex">
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              <button class="p-1 text-gray-400 hover:text-gray-700 hover:bg-white rounded"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto px-2 pb-2 space-y-2">
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer opacity-75">
+              <div class="flex flex-wrap gap-1 mb-2">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-blue-100 text-blue-700">Backend</span>
+              </div>
+              <h4 class="text-sm font-medium text-gray-700 line-through">Create database schema</h4>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center gap-3 text-xs text-gray-400">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[10px] font-semibold">B</div>
+              </div>
+            </a>
+            <a href="04-task-detail.html" class="task-card block bg-white rounded-lg p-3 cursor-pointer opacity-75">
+              <h4 class="text-sm font-medium text-gray-700 line-through">Setup Eureka + Config Server</h4>
+              <div class="flex items-center justify-end mt-3">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-[10px] font-semibold">A</div>
+              </div>
+            </a>
+          </div>
+          <button class="m-2 px-3 py-2 text-sm text-gray-600 hover:bg-white rounded-lg flex items-center gap-1.5 justify-center">
+            <i data-lucide="plus" class="w-4 h-4"></i> Thêm task
+          </button>
+        </div>
+
+        <!-- Add new column -->
+        <button class="w-72 h-32 rounded-xl border-2 border-dashed border-gray-300 hover:border-primary-500 hover:bg-primary-50/30 transition flex items-center justify-center text-gray-500 hover:text-primary-600 font-medium text-sm">
+          <i data-lucide="plus" class="w-4 h-4 mr-1"></i> Thêm cột
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<a href="index.html" class="fixed bottom-6 right-6 px-3 py-1.5 text-xs bg-gray-900 text-white rounded-full opacity-50 hover:opacity-100">← Mockup index</a>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TaskFlow Mockup Index</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Inter', 'sans-serif'] },
+      colors: { primary: { 50:'#eef2ff',100:'#e0e7ff',500:'#6366f1',600:'#4f46e5',700:'#4338ca' } }
+    }
+  }
+}
+</script>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+<div class="max-w-5xl mx-auto p-12">
+  <h1 class="text-4xl font-bold text-gray-900">TaskFlow — UI Mockup</h1>
+  <p class="text-gray-600 mt-2">Click vào từng màn hình bên dưới để xem thiết kế trước khi code React.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+    <a href="01-login.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">01</div>
+      <h2 class="text-xl font-semibold mt-2">Login / Register</h2>
+      <p class="text-gray-500 mt-2 text-sm">Split-screen, illustration trái + form phải. Đăng nhập, đăng ký, quên mật khẩu.</p>
+    </a>
+
+    <a href="02-dashboard.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">02</div>
+      <h2 class="text-xl font-semibold mt-2">Dashboard / Projects</h2>
+      <p class="text-gray-500 mt-2 text-sm">Topbar + sidebar + grid cards project. Empty state, search, filter.</p>
+    </a>
+
+    <a href="03-board.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">03</div>
+      <h2 class="text-xl font-semibold mt-2">Kanban Board (chính)</h2>
+      <p class="text-gray-500 mt-2 text-sm">Drag-drop task giữa các list, task card đẹp với label/assignee/due/checklist progress.</p>
+    </a>
+
+    <a href="04-task-detail.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">04</div>
+      <h2 class="text-xl font-semibold mt-2">Task Detail Panel</h2>
+      <p class="text-gray-500 mt-2 text-sm">Side panel slide-in: description, properties, checklist, comments, attachments, activity.</p>
+    </a>
+
+    <a href="05-notifications.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">05</div>
+      <h2 class="text-xl font-semibold mt-2">Notifications</h2>
+      <p class="text-gray-500 mt-2 text-sm">Dropdown từ topbar + page riêng. Realtime badge.</p>
+    </a>
+
+    <a href="06-members.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition p-6">
+      <div class="text-xs font-semibold text-primary-600 uppercase tracking-wider">06</div>
+      <h2 class="text-xl font-semibold mt-2">Members / Settings</h2>
+      <p class="text-gray-500 mt-2 text-sm">Quản lý thành viên, role dropdown, invite modal.</p>
+    </a>
+  </div>
+
+  <div class="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+    <h3 class="font-semibold text-blue-900">Nguyên tắc thiết kế</h3>
+    <ul class="text-sm text-blue-800 mt-3 space-y-1.5 list-disc pl-5">
+      <li><b>Minimal, breathing room</b> — neutral gray + 1 accent indigo, không gradient lòe loẹt</li>
+      <li><b>Inter font</b> — clean, modern, đọc dễ</li>
+      <li><b>Card subtle shadow</b> — nhấn nhá hierarchy</li>
+      <li><b>Smooth transition</b> — hover lift 1-2px, drag-drop animation 150ms</li>
+      <li><b>Skeleton loading</b> thay vì spinner</li>
+      <li><b>Empty state</b> có illustration + CTA</li>
+      <li><b>Optimistic UI</b> — kéo task xong update ngay, fail thì rollback</li>
+      <li><b>Dark mode</b> sẵn sàng (toggle ở topbar)</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

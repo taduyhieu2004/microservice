@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TaskFlow — Members</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Inter', 'sans-serif'] },
+    colors: { primary: { 50:'#eef2ff',100:'#e0e7ff',500:'#6366f1',600:'#4f46e5',700:'#4338ca' } }
+  }}
+}
+</script>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen">
+
+<header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-30 h-14">
+  <div class="h-full px-4 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary-600 rounded-md flex items-center justify-center">
+        <i data-lucide="square-kanban" class="w-4 h-4 text-white"></i>
+      </div>
+      <span class="font-bold text-gray-900">TaskFlow</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"><i data-lucide="bell" class="w-5 h-5"></i></button>
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-semibold text-sm">A</div>
+    </div>
+  </div>
+</header>
+
+<aside class="w-60 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0">
+  <nav class="px-2 py-3 space-y-0.5">
+    <a href="02-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+      <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+    </a>
+    <div class="px-3 mt-4 mb-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">TaskFlow Mobile</div>
+    <a href="03-board.html" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+      <i data-lucide="layout" class="w-4 h-4"></i> Boards
+    </a>
+    <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg bg-primary-50 text-primary-700 font-medium">
+      <i data-lucide="users" class="w-4 h-4"></i> Members
+    </a>
+    <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+      <i data-lucide="zap" class="w-4 h-4"></i> Sprints
+    </a>
+    <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+      <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Reports
+    </a>
+    <a href="#" class="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100">
+      <i data-lucide="settings" class="w-4 h-4"></i> Settings
+    </a>
+  </nav>
+</aside>
+
+<main class="ml-60 pt-14 p-8">
+  <div class="max-w-4xl">
+    <!-- Header -->
+    <div class="flex items-end justify-between mb-6">
+      <div>
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <a href="02-dashboard.html" class="hover:text-gray-700">Projects</a>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          <a href="#" class="hover:text-gray-700">TaskFlow Mobile</a>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          <span class="text-gray-900 font-medium">Members</span>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900 mt-2">Thành viên</h1>
+        <p class="text-sm text-gray-500 mt-1">Quản lý 2 thành viên trong project</p>
+      </div>
+      <button onclick="document.getElementById('inviteModal').classList.remove('hidden')" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 flex items-center gap-2 shadow-sm">
+        <i data-lucide="user-plus" class="w-4 h-4"></i> Mời thành viên
+      </button>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="flex items-center gap-2 mb-4">
+      <div class="relative flex-1 max-w-xs">
+        <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+        <input placeholder="Tìm thành viên..." class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+      </div>
+      <div class="relative">
+        <select class="appearance-none pl-3 pr-9 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700">
+          <option>Tất cả role</option>
+          <option>Owner</option>
+          <option>Admin</option>
+          <option>Editor</option>
+          <option>Commenter</option>
+          <option>Viewer</option>
+        </select>
+        <i data-lucide="chevron-down" class="absolute right-2 top-2.5 w-4 h-4 text-gray-400 pointer-events-none"></i>
+      </div>
+    </div>
+
+    <!-- Members table -->
+    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-xs uppercase text-gray-500 tracking-wider">
+          <tr>
+            <th class="text-left px-5 py-3 font-semibold">Thành viên</th>
+            <th class="text-left px-5 py-3 font-semibold">Role</th>
+            <th class="text-left px-5 py-3 font-semibold">Tham gia</th>
+            <th class="px-5 py-3 w-12"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-semibold text-sm">A</div>
+                <div>
+                  <div class="font-medium text-gray-900">Alice Updated <span class="ml-1 px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-700 rounded font-semibold">Bạn</span></div>
+                  <div class="text-xs text-gray-500">alice@example.com</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-3">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-700">
+                <i data-lucide="crown" class="w-3 h-3"></i> Owner
+              </span>
+            </td>
+            <td class="px-5 py-3 text-gray-500">04/05/2026</td>
+            <td class="px-5 py-3">
+              <button class="p-1.5 text-gray-400 hover:text-gray-700 rounded"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-semibold text-sm">B</div>
+                <div>
+                  <div class="font-medium text-gray-900">Bob</div>
+                  <div class="text-xs text-gray-500">bob@example.com</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-3">
+              <div class="relative inline-block">
+                <select class="appearance-none pl-3 pr-9 py-1 text-xs font-semibold border border-gray-300 rounded bg-white">
+                  <option>EDITOR</option>
+                  <option>VIEWER</option>
+                  <option>COMMENTER</option>
+                  <option>ADMIN</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-2 top-1.5 w-3 h-3 text-gray-400 pointer-events-none"></i>
+              </div>
+            </td>
+            <td class="px-5 py-3 text-gray-500">04/05/2026</td>
+            <td class="px-5 py-3">
+              <button class="p-1.5 text-gray-400 hover:text-rose-600 rounded" title="Remove"><i data-lucide="user-minus" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Role explanation -->
+    <div class="mt-8 p-5 bg-blue-50 border border-blue-100 rounded-xl">
+      <div class="flex items-start gap-3">
+        <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <h3 class="font-semibold text-blue-900 text-sm">Hệ thống vai trò</h3>
+          <ul class="mt-2 text-sm text-blue-800 space-y-1">
+            <li><b>Owner</b> — Toàn quyền, xoá project, chuyển owner</li>
+            <li><b>Admin</b> — Quản lý thành viên, board, sprint</li>
+            <li><b>Editor</b> — Tạo / sửa / xoá task, board, list</li>
+            <li><b>Commenter</b> — Chỉ xem và comment</li>
+            <li><b>Viewer</b> — Chỉ xem</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Invite modal -->
+<div id="inviteModal" class="hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-900">Mời thành viên mới</h2>
+        <button onclick="document.getElementById('inviteModal').classList.add('hidden')" class="p-1 text-gray-400 hover:text-gray-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-sm text-gray-500 mt-1">Tìm theo email hoặc username</p>
+
+      <div class="mt-5 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Email hoặc username</label>
+          <div class="relative">
+            <i data-lucide="user" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+            <input placeholder="bob@example.com" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-sm">
+          </div>
+        </div>
+
+        <!-- User suggestion -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <div class="p-3 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm">C</div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-900">Charlie</div>
+              <div class="text-xs text-gray-500">charlie@example.com</div>
+            </div>
+            <i data-lucide="check" class="w-4 h-4 text-primary-600"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Vai trò</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="border border-gray-300 rounded-lg p-3 cursor-pointer hover:border-primary-500 hover:bg-primary-50/50 has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+              <input type="radio" name="role" class="sr-only">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold">Editor</span>
+                <i data-lucide="circle-check-big" class="w-4 h-4 text-primary-600"></i>
+              </div>
+              <p class="text-xs text-gray-500 mt-0.5">Tạo/sửa task</p>
+            </label>
+            <label class="border border-gray-300 rounded-lg p-3 cursor-pointer hover:border-primary-500 hover:bg-primary-50/50">
+              <input type="radio" name="role" class="sr-only">
+              <span class="text-sm font-semibold">Viewer</span>
+              <p class="text-xs text-gray-500 mt-0.5">Chỉ xem</p>
+            </label>
+            <label class="border border-gray-300 rounded-lg p-3 cursor-pointer hover:border-primary-500 hover:bg-primary-50/50">
+              <input type="radio" name="role" class="sr-only">
+              <span class="text-sm font-semibold">Commenter</span>
+              <p class="text-xs text-gray-500 mt-0.5">Xem + comment</p>
+            </label>
+            <label class="border border-gray-300 rounded-lg p-3 cursor-pointer hover:border-primary-500 hover:bg-primary-50/50">
+              <input type="radio" name="role" class="sr-only">
+              <span class="text-sm font-semibold">Admin</span>
+              <p class="text-xs text-gray-500 mt-0.5">Quản lý project</p>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-6 py-4 bg-gray-50 rounded-b-2xl flex justify-end gap-2">
+      <button onclick="document.getElementById('inviteModal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Huỷ</button>
+      <button class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">Thêm thành viên</button>
+    </div>
+  </div>
+</div>
+
+<a href="index.html" class="fixed bottom-6 right-6 px-3 py-1.5 text-xs bg-gray-900 text-white rounded-full opacity-50 hover:opacity-100">← Mockup index</a>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
