@@ -19,6 +19,7 @@ import { TaskCard } from '@/features/boards/task-card';
 import { projectsApi } from '@/features/projects/projects-api';
 import { labelsApi, tasksApi } from '@/features/tasks/tasks-api';
 import { QuickCreateTask } from '@/features/tasks/quick-create-task';
+import { TaskDetailPanel } from '@/features/tasks/task-detail-panel';
 import { extractErrorMessage } from '@/lib/api';
 import type { BoardList } from '@/types/project';
 import type { Task } from '@/types/task';
@@ -30,6 +31,7 @@ export function BoardPage() {
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [creatingInList, setCreatingInList] = useState<number | null>(null);
+  const [openTaskId, setOpenTaskId] = useState<number | null>(null);
 
   const projectQuery = useQuery({
     queryKey: ['project', projectId],
@@ -176,6 +178,7 @@ export function BoardPage() {
                       list={list}
                       tasks={listTasks}
                       labels={labels}
+                      onTaskClick={(t) => setOpenTaskId(t.id)}
                       onAddTask={() => setCreatingInList(list.id)}
                     />
                     {creatingInList === list.id && boardId && (
@@ -198,6 +201,14 @@ export function BoardPage() {
           </DragOverlay>
         </DndContext>
       )}
+
+      <TaskDetailPanel
+        taskId={openTaskId}
+        lists={lists}
+        projectId={projectId}
+        projectKey={project?.key}
+        onClose={() => setOpenTaskId(null)}
+      />
     </div>
   );
 }
