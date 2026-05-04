@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-notifications-table" author="taskflow">
+        <createTable tableName="notifications">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="type" type="varchar(50)"><constraints nullable="false"/></column>
+            <column name="title" type="varchar(255)"><constraints nullable="false"/></column>
+            <column name="body" type="text"/>
+            <column name="link" type="varchar(500)"/>
+            <column name="read_at" type="bigint"/>
+            <column name="metadata" type="jsonb"/>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="created_at" type="bigint"/>
+            <column name="last_updated_by" type="varchar(255)"/>
+            <column name="last_updated_at" type="bigint"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="notifications" indexName="idx_notif_user_unread">
+            <column name="user_id"/>
+            <column name="read_at"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
