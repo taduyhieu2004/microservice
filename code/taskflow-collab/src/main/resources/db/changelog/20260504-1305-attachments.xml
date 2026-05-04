@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-attachments-table" author="taskflow">
+        <createTable tableName="attachments">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="project_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="uploader_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="file_name" type="varchar(255)"><constraints nullable="false"/></column>
+            <column name="mime_type" type="varchar(100)"/>
+            <column name="size_bytes" type="bigint"><constraints nullable="false"/></column>
+            <column name="storage_key" type="varchar(500)"><constraints nullable="false" unique="true"/></column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="created_at" type="bigint"/>
+            <column name="last_updated_by" type="varchar(255)"/>
+            <column name="last_updated_at" type="bigint"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="attachments" indexName="idx_attach_task">
+            <column name="task_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
