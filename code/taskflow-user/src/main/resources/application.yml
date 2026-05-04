@@ -1,0 +1,66 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/taskflow_user}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  liquibase:
+    change-log: classpath:db/master.xml
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  mvc:
+    problemdetails:
+      enabled: false
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.uuid}
+
+jwt:
+  access-token:
+    secret-key: ${JWT_ACCESS_SECRET:dGFza2Zsb3dfYWNjZXNzX3Rva2VuX3NlY3JldF9rZXlfZGV2X29ubHk=}
+    ttl: 3600000           # 1 hour
+  refresh-token:
+    secret-key: ${JWT_REFRESH_SECRET:dGFza2Zsb3dfcmVmcmVzaF90b2tlbl9zZWNyZXRfa2V5X2Rldl9vbmx5}
+    ttl: 2592000000        # 30 days
+  reset-password-token:
+    secret-key: ${JWT_RESET_SECRET:dGFza2Zsb3dfcmVzZXRfcGFzc3dvcmRfc2VjcmV0X2Rldl9vbmx5}
+    ttl: 300000            # 5 minutes
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.taskflow: DEBUG
+    org.springframework.security: INFO
