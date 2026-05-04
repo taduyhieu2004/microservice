@@ -1,6 +1,7 @@
-import { Bell, Moon, Search, SquareKanban } from 'lucide-react';
+import { Moon, Search, SquareKanban } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Avatar } from '@/components/ui/avatar';
+import { NotificationsDropdown } from '@/features/notifications/notifications-dropdown';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function Topbar() {
@@ -29,10 +30,7 @@ export function Topbar() {
           <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Dark mode">
             <Moon className="w-5 h-5" />
           </button>
-          <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative" title="Thông báo">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
-          </button>
+          <NotificationsDropdown />
           <button className="flex items-center gap-2 p-1 hover:bg-gray-100 rounded-lg" title={user?.username}>
             <Avatar name={user?.full_name ?? user?.username} seed={user?.id} size="md" />
           </button>

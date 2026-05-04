@@ -4,10 +4,12 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
 import { authApi } from '@/features/auth/auth-api';
+import { useNotificationsStream } from '@/features/notifications/use-notifications-stream';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function AppLayout() {
   const { user, updateUser } = useAuthStore();
+  useNotificationsStream();
 
   const { data: me } = useQuery({
     queryKey: ['me'],
