@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-task_watchers-table" author="taskflow">
+        <createTable tableName="task_watchers">
+            <column name="task_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="user_id" type="bigint"><constraints nullable="false"/></column>
+            <column name="watched_at" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="task_watchers" columnNames="task_id,user_id"
+                       constraintName="pk_task_watchers"/>
+    </changeSet>
+</databaseChangeLog>
