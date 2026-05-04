@@ -5,6 +5,7 @@ import { LoginPage } from '@/features/auth/login-page';
 import { RegisterPage } from '@/features/auth/register-page';
 import { ForgotPasswordPage } from '@/features/auth/forgot-password-page';
 import { DashboardPage } from '@/features/projects/dashboard-page';
+import { BoardPage } from '@/features/boards/board-page';
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
         children: [
           { path: '/dashboard', element: <DashboardPage /> },
           { path: '/projects', element: <DashboardPage /> },
+          { path: '/projects/:projectId', element: <BoardPage /> },
         ],
       },
     ],
